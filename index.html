@@ -305,5 +305,41 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="scripts.js"></script>
+
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "HIER_DEIN_API_KEY",
+    authDomain: "HIER_DEIN_PROJECT.firebaseapp.com",
+    databaseURL: "HIER_DEINE_DATABASE_URL",
+    projectId: "HIER_DEIN_PROJECT_ID",
+    storageBucket: "HIER_DEIN_PROJECT.appspot.com",
+    messagingSenderId: "HIER_DEINE_ID",
+    appId: "HIER_DEINE_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Beispiel: Eintrag speichern
+  window.addEntry = function(name, amount) {
+    const entriesRef = ref(db, "entries");
+    const newEntryRef = push(entriesRef);
+    set(newEntryRef, {
+      name: name,
+      amount: amount,
+      timestamp: Date.now()
+    });
+  };
+
+  // Echtzeit lesen
+  const entriesRef = ref(db, "entries");
+  onValue(entriesRef, (snapshot) => {
+    const data = snapshot.val();
+    console.log("Aktuelle Daten:", data);
+  });
+</script>
   </body>
 </html>
